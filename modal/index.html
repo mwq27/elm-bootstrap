@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Buzzword Bingo</title>
+  <script type="text/javascript" src="HomePage.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+</head>
+
+<body>
+  <div id="elm-app"></div>
+</body>
+
+<script type="text/javascript">
+var appDiv = document.getElementById("elm-app");
+var app = Elm.embed(Elm.HomePage, appDiv, { modalPort: 0, initModalPort: ""});
+
+document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    if (evt.keyCode == 27) {
+      app.ports.modalPort.send(evt.keyCode);
+    }
+};
+
+
+function bsModalActivate(el) {
+  el.addEventListener('click', function() {
+    console.debug(i);
+    var $target = el.getAttribute('data-target');
+    //Send the target to the elm port to toggle that modal
+    app.ports.initModalPort.send($target);
+  });
+}
+
+var modalEls = document.querySelectorAll('[data-toggle]');
+
+for(var i = 0; i < modalEls.length; ++i) {
+  bsModalActivate(modalEls[i]);
+}
+</script>
+
+</html>

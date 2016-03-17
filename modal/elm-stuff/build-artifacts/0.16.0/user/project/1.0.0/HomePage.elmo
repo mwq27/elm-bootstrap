@@ -1,0 +1,102 @@
+Elm.HomePage = Elm.HomePage || {};
+Elm.HomePage.make = function (_elm) {
+   "use strict";
+   _elm.HomePage = _elm.HomePage || {};
+   if (_elm.HomePage.values) return _elm.HomePage.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Modal = Elm.Modal.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $StartApp = Elm.StartApp.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var update = F2(function (action,model) {
+      var _p0 = action;
+      switch (_p0.ctor)
+      {case "OpenModal": return {ctor: "_Tuple2",_0: $Modal.bsOpenModal,_1: $Effects.none};
+         case "CloseModal": return {ctor: "_Tuple2",_0: $Modal.bsCloseModal,_1: $Effects.none};
+         default: return {ctor: "_Tuple2",_0: model,_1: $Effects.none};}
+   });
+   var CloseModal = {ctor: "CloseModal"};
+   var view = F2(function (address,model) {
+      return A2($Html.div,
+      _U.list([$Html$Attributes.id("container")]),
+      _U.list([A2($Html.div,
+              _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2",_0: "modal-backdrop",_1: true}
+                                                          ,{ctor: "_Tuple2",_0: "fade",_1: true}
+                                                          ,{ctor: "_Tuple2",_0: "in",_1: model.isShown}
+                                                          ,{ctor: "_Tuple2",_0: "hide",_1: $Basics.not(model.isShown)}]))]),
+              _U.list([]))
+              ,A2($Html.button,
+              _U.list([$Html$Attributes.type$("button")
+                      ,A2($Html$Attributes.attribute,"data-toggle","modal")
+                      ,A2($Html$Attributes.attribute,"data-target","#myModal")]),
+              _U.list([$Html.text("Show Modal")]))
+              ,A2($Html.div,
+              _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2",_0: "modal",_1: true}
+                                                          ,{ctor: "_Tuple2",_0: "fade",_1: true}
+                                                          ,{ctor: "_Tuple2",_0: "in",_1: model.isShown}
+                                                          ,{ctor: "_Tuple2",_0: "show",_1: model.isShown}]))
+                      ,$Html$Attributes.id("myModal")]),
+              _U.list([A2($Html.div,
+              _U.list([$Html$Attributes.$class("modal-dialog")]),
+              _U.list([A2($Html.div,
+              _U.list([$Html$Attributes.$class("modal-content")]),
+              _U.list([A2($Html.div,
+                      _U.list([$Html$Attributes.$class("modal-header")]),
+                      _U.list([$Html.text("This is a modal header")
+                              ,A2($Html.button,
+                              _U.list([$Html$Attributes.$class("close")
+                                      ,A2($Html$Attributes.attribute,"data-dismiss","modal")
+                                      ,$Html$Attributes.type$("button")
+                                      ,A2($Html$Events.onClick,address,CloseModal)]),
+                              _U.list([A2($Html.span,_U.list([]),_U.list([$Html.text("x")]))]))]))
+                      ,A2($Html.div,_U.list([$Html$Attributes.$class("modal-body")]),_U.list([$Html.text("This is the body")]))
+                      ,A2($Html.div,
+                      _U.list([$Html$Attributes.$class("modal-footer")]),
+                      _U.list([A2($Html.button,_U.list([$Html$Attributes.type$("button")]),_U.list([$Html.text("Close")]))
+                              ,A2($Html.button,
+                              _U.list([$Html$Attributes.type$("button")
+                                      ,A2($Html$Attributes.attribute,"data-dismiss","modal")
+                                      ,A2($Html$Events.onClick,address,CloseModal)]),
+                              _U.list([$Html.text("Save Changes")]))]))]))]))]))]));
+   });
+   var OpenModal = {ctor: "OpenModal"};
+   var initModal = function (target) {    return OpenModal;};
+   var NoOp = {ctor: "NoOp"};
+   var escKeyPressed = function (keyCode) {    var _p1 = keyCode;if (_p1 === 27) {    return CloseModal;} else {    return NoOp;}};
+   var initModalPort = Elm.Native.Port.make(_elm).inboundSignal("initModalPort",
+   "String",
+   function (v) {
+      return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",v);
+   });
+   var modalPort = Elm.Native.Port.make(_elm).inboundSignal("modalPort",
+   "Int",
+   function (v) {
+      return typeof v === "number" && isFinite(v) && Math.floor(v) === v ? v : _U.badPort("an integer",v);
+   });
+   var app = $StartApp.start({init: {ctor: "_Tuple2",_0: $Modal.initialModel,_1: $Effects.none}
+                             ,update: update
+                             ,view: view
+                             ,inputs: _U.list([A2($Signal.map,escKeyPressed,modalPort),A2($Signal.map,initModal,initModalPort)])});
+   var tasks = Elm.Native.Task.make(_elm).performSignal("tasks",app.tasks);
+   var main = app.html;
+   return _elm.HomePage.values = {_op: _op
+                                 ,NoOp: NoOp
+                                 ,OpenModal: OpenModal
+                                 ,CloseModal: CloseModal
+                                 ,update: update
+                                 ,escKeyPressed: escKeyPressed
+                                 ,initModal: initModal
+                                 ,view: view
+                                 ,app: app
+                                 ,main: main};
+};
